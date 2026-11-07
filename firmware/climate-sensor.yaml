@@ -3,7 +3,7 @@
 esphome:
   name: climate-sensor
   project:
-    name: exposa.climate-sensor
+    name: affectra.climate-sensor
     version: "1.0.0"
 
 esp32:
@@ -15,7 +15,7 @@ logger:
 
 # Dummy credentials: the build only needs them to be set.
 wifi:
-  ssid: "exposa-demo"
+  ssid: "affectra-demo"
   password: "not-a-real-password"
 
 api:

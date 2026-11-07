@@ -1,7 +1,7 @@
-# exposa-demo
+# affectra-demo
 
 A small ESPHome device whose CI builds the firmware and writes its SBOM, for
-trying out [Exposa](https://github.com/schmidtfx/exposa).
+trying out [Affectra](https://github.com/affectra/affectra).
 
 ## The device
 
@@ -40,13 +40,13 @@ transparency log:
 - **Build provenance:** this workflow built these images. Saved as
   `climate-sensor.provenance.sigstore.json`.
 - **SBOM:** this SBOM describes exactly these images. Saved as
-  `climate-sensor.cdx.json.sigstore.json` and sent to Exposa (below).
+  `climate-sensor.cdx.json.sigstore.json` and sent to Affectra (below).
 
 Check a downloaded image with:
 
 ```sh
-gh attestation verify climate-sensor.ota.bin --repo schmidtfx/exposa-demo
-gh attestation verify climate-sensor.ota.bin --repo schmidtfx/exposa-demo \
+gh attestation verify climate-sensor.ota.bin --repo affectra/affectra-demo
+gh attestation verify climate-sensor.ota.bin --repo affectra/affectra-demo \
   --predicate-type https://cyclonedx.org/bom   # also shows the attested SBOM
 ```
 
@@ -56,35 +56,35 @@ GitHub: add
 `--predicate-type` above).
 
 Attestations need the repository to be public (or on GitHub Enterprise Cloud), and
-Exposa accepts them from public repositories only.
+Affectra accepts them from public repositories only.
 
 ### Releases
 
-A tag `v*` also publishes a [GitHub release](https://github.com/schmidtfx/exposa-demo/releases)
+A tag `v*` also publishes a [GitHub release](https://github.com/affectra/affectra-demo/releases)
 with both firmware images, the SBOM, both attestation bundles and `SHA256SUMS`.
 Artifacts expire after 90 days; releases stay, so each version can be downloaded and
 checked for as long as it is supported. Running the job again replaces the release's
 files.
 
-### Upload to Exposa
+### Upload to Affectra
 
-On a tag `v*` the SBOM goes to Exposa with its attestation, into product
-**Climate Sensor**, hardware revision **esp32dev**, version = the tag. Exposa checks
+On a tag `v*` the SBOM goes to Affectra with its attestation, into product
+**Climate Sensor**, hardware revision **esp32dev**, version = the tag. Affectra checks
 the attestation, marks the SBOM **signed** because the same trusted repository made
 it, and lists the two firmware images it describes. To turn that on:
 
-1. In Exposa, as an organization admin: **Trusted publishers**, trust this
+1. In Affectra, as an organization admin: **Trusted publishers**, trust this
    repository (optionally only `firmware.yml` and `refs/tags/v*`; leave the
    environment empty, since attestations carry none). Optionally switch on **Accept
    only SBOMs signed by a trusted repository**.
 2. In this repository: **Settings → Secrets and variables → Actions → Variables**,
-   set `EXPOSA_URL` (your instance) and `EXPOSA_ORG` (the organization slug).
+   set `AFFECTRA_URL` (your instance) and `AFFECTRA_ORG` (the organization slug).
 
-Without `EXPOSA_URL` the upload job is skipped. The build provenance attestation is
-not sent; Exposa does not use it yet.
+Without `AFFECTRA_URL` the upload job is skipped. The build provenance attestation is
+not sent; Affectra does not use it yet.
 
 ESP-IDF 4.4.8 has known vulnerabilities (e.g. CVE-2025-55297, CVE-2025-66409), so
-the release in Exposa has findings to look at and assess.
+the release in Affectra has findings to look at and assess.
 
 ## Build locally
 

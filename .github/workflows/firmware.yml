@@ -27,7 +27,7 @@ jobs:
       # GitHub attestations, keyless with Sigstore, not for pull requests
       # (README.md): which workflow and commit built the firmware, and that the
       # SBOM describes exactly these firmware files. The SBOM attestation also
-      # goes to Exposa: upload-sbom sends <sbom>.sigstore.json with the SBOM.
+      # goes to Affectra: upload-sbom sends <sbom>.sigstore.json with the SBOM.
       - name: Attest build provenance
         id: attest-provenance
         if: github.event_name != 'pull_request'
@@ -55,26 +55,26 @@ jobs:
           path: dist/
           if-no-files-found: error
 
-  # On a version tag, send the SBOM to Exposa. Runs only when the repository
-  # variables EXPOSA_URL and EXPOSA_ORG are set and Exposa trusts this repository
+  # On a version tag, send the SBOM to Affectra. Runs only when the repository
+  # variables AFFECTRA_URL and AFFECTRA_ORG are set and Affectra trusts this repository
   # (Trusted publishers); see README.md.
   upload:
-    name: Upload SBOM to Exposa
+    name: Upload SBOM to Affectra
     needs: build
-    if: startsWith(github.ref, 'refs/tags/v') && vars.EXPOSA_URL != ''
+    if: startsWith(github.ref, 'refs/tags/v') && vars.AFFECTRA_URL != ''
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write   # lets the job prove to Exposa which repository it runs in
+      id-token: write   # lets the job prove to Affectra which repository it runs in
     steps:
       - uses: actions/download-artifact@v8
         with:
           name: climate-sensor
           path: dist
-      - uses: schmidtfx/upload-sbom@v1
+      - uses: affectra/upload-sbom@v1
         with:
-          url: ${{ vars.EXPOSA_URL }}
-          organization: ${{ vars.EXPOSA_ORG }}
+          url: ${{ vars.AFFECTRA_URL }}
+          organization: ${{ vars.AFFECTRA_ORG }}
           product: Climate Sensor
           hardware-revision: esp32dev
           version: ${{ github.ref_name }}
